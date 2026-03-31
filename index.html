@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GeoFence — Zone Alert System</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0c0f;
+    --surface: #111318;
+    --surface2: #181b22;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.13);
+    --accent: #00e5a0;
+    --accent-dim: rgba(0,229,160,0.12);
+    --danger: #ff4d6d;
+    --danger-dim: rgba(255,77,109,0.12);
+    --warn: #ffb830;
+    --warn-dim: rgba(255,184,48,0.1);
+    --text: #e8eaf0;
+    --muted: #6b7280;
+    --mono: 'Space Mono', monospace;
+    --sans: 'DM Sans', sans-serif;
+  }
+
+  html, body { height: 100%; overflow: hidden; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── HEADER ── */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    flex-shrink: 0;
+    z-index: 1000;
+  }
+
+  .logo {
+    font-family: var(--mono);
+    font-size: 15px;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .logo-dot {
+    width: 8px; height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--accent);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.7); }
+  }
+
+  .status-pill {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    padding: 4px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    border: 1px solid;
+    transition: all 0.3s;
+  }
+  .status-pill.idle   { color: var(--muted); border-color: var(--muted); }
+  .status-pill.inside { color: var(--accent); border-color: var(--accent); background: var(--accent-dim); }
+  .status-pill.outside{ color: var(--danger); border-color: var(--danger); background: var(--danger-dim); }
+
+  /* ── LAYOUT ── */
+  .layout {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: 300px;
+    min-width: 300px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    z-index: 500;
+  }
+
+  .sidebar::-webkit-scrollbar { width: 4px; }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+
+  .section {
+    padding: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  /* ── COORDS DISPLAY ── */
+  .coords-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .coord-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+  .coord-box .lbl {
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    text-transform: uppercase;
+    font-family: var(--mono);
+  }
+  .coord-box .val {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    margin-top: 4px;
+    letter-spacing: 0.03em;
+  }
+
+  /* ── INPUTS ── */
+  .input-group { margin-bottom: 10px; }
+  .input-group label {
+    display: block;
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 5px;
+    font-family: var(--mono);
+    letter-spacing: 0.05em;
+  }
+  .input-group input {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 9px 12px;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 12px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .input-group input:focus { border-color: var(--accent); }
+  .input-group input::placeholder { color: var(--muted); }
+
+  /* ── BUTTONS ── */
+  .btn {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 8px;
+  }
+  .btn-primary {
+    background: var(--accent-dim);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .btn-primary:hover { background: rgba(0,229,160,0.22); }
+  .btn-primary:disabled { opacity: 0.35; cursor: not-allowed; }
+  .btn-danger {
+    background: var(--danger-dim);
+    border-color: var(--danger);
+    color: var(--danger);
+  }
+  .btn-danger:hover { background: rgba(255,77,109,0.22); }
+  .btn-ghost {
+    background: transparent;
+    border-color: var(--border2);
+    color: var(--muted);
+  }
+  .btn-ghost:hover { border-color: var(--text); color: var(--text); }
+
+  /* ── ZONE LIST ── */
+  .zone-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    transition: border-color 0.2s;
+  }
+  .zone-item.active-zone { border-color: var(--accent); }
+  .zone-color-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .zone-info { flex: 1; min-width: 0; }
+  .zone-name {
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .zone-meta {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .zone-del {
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+    padding: 0 2px;
+    transition: color 0.2s;
+  }
+  .zone-del:hover { color: var(--danger); }
+
+  /* ── ALERT LOG ── */
+  .log-empty {
+    font-size: 12px;
+    color: var(--muted);
+    font-family: var(--mono);
+    text-align: center;
+    padding: 20px 0;
+  }
+  .log-item {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+    animation: fadein 0.3s ease;
+  }
+  @keyframes fadein { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; } }
+  .log-icon { font-size: 14px; margin-top: 1px; flex-shrink: 0; }
+  .log-text { flex: 1; }
+  .log-zone { font-weight: 500; }
+  .log-time { font-family: var(--mono); font-size: 9px; color: var(--muted); margin-top: 2px; }
+  .log-enter { color: var(--accent); }
+  .log-exit  { color: var(--danger); }
+
+  /* ── MAP ── */
+  #map {
+    flex: 1;
+    position: relative;
+  }
+
+  /* ── ALERT BANNER ── */
+  #alert-banner {
+    position: absolute;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-80px);
+    z-index: 2000;
+    background: var(--surface);
+    border: 1px solid var(--accent);
+    border-radius: 12px;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 260px;
+    box-shadow: 0 4px 32px rgba(0,229,160,0.15);
+    transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    pointer-events: none;
+  }
+  #alert-banner.show { transform: translateX(-50%) translateY(0); }
+  #alert-banner.exit-alert {
+    border-color: var(--danger);
+    box-shadow: 0 4px 32px rgba(255,77,109,0.15);
+  }
+  .alert-icon { font-size: 20px; }
+  .alert-msg { font-size: 13px; font-weight: 500; }
+  .alert-sub { font-family: var(--mono); font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+  /* ── DISTANCE RING (map overlay) ── */
+  #dist-overlay {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    z-index: 1000;
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    min-width: 160px;
+    display: none;
+  }
+  #dist-overlay .dist-val {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1;
+    margin: 4px 0;
+  }
+
+  /* ── LEAFLET OVERRIDES ── */
+  .leaflet-container { background: #0d1117; }
+  .leaflet-tile { filter: none; }
+  .leaflet-control-zoom a {
+    background: var(--surface) !important;
+    color: var(--text) !important;
+    border-color: var(--border2) !important;
+  }
+  .leaflet-control-zoom a:hover { background: var(--surface2) !important; }
+  .leaflet-popup-content-wrapper {
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    font-family: var(--mono);
+    font-size: 11px;
+    box-shadow: none;
+  }
+  .leaflet-popup-tip { background: var(--surface); }
+  .user-marker-wrap {
+    display: flex; align-items: center; justify-content: center;
+    width: 18px; height: 18px;
+    background: var(--accent);
+    border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 4px rgba(0,229,160,0.3);
+    animation: ripple 2s infinite;
+  }
+  @keyframes ripple {
+    0% { box-shadow: 0 0 0 0 rgba(0,229,160,0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(0,229,160,0); }
+    100% { box-shadow: 0 0 0 0 rgba(0,229,160,0); }
+  }
+
+  /* ── COLOR PICKER ROW ── */
+  .color-row { display: flex; gap: 6px; flex-wrap: wrap; }
+  .color-swatch {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: transform 0.15s, border-color 0.15s;
+  }
+  .color-swatch:hover { transform: scale(1.15); }
+  .color-swatch.selected { border-color: #fff; }
+
+  /* ── RADIUS DISPLAY ── */
+  .radius-display {
+    font-family: var(--mono);
+    font-size: 20px;
+    color: var(--accent);
+    text-align: center;
+    margin: 6px 0;
+  }
+  .radius-display span { font-size: 12px; color: var(--muted); }
+
+  input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 4px;
+    background: var(--border2);
+    border-radius: 2px;
+    outline: none;
+    margin: 6px 0;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    box-shadow: 0 0 6px rgba(0,229,160,0.5);
+  }
+
+  .tip {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.5;
+    margin-top: 8px;
+  }
+  .tip strong { color: var(--warn); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-dot"></div>
+    GEOFENCE
+  </div>
+  <div id="status-pill" class="status-pill idle">● IDLE</div>
+</header>
+
+<div class="layout">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+
+    <!-- Current Position -->
+    <div class="section">
+      <div class="section-label">Your Position</div>
+      <div class="coords-grid">
+        <div class="coord-box"><div class="lbl">LAT</div><div class="val" id="disp-lat">—</div></div>
+        <div class="coord-box"><div class="lbl">LNG</div><div class="val" id="disp-lng">—</div></div>
+        <div class="coord-box"><div class="lbl">ACC</div><div class="val" id="disp-acc">—</div></div>
+        <div class="coord-box"><div class="lbl">ZONES</div><div class="val" id="disp-zones">0</div></div>
+      </div>
+      <div style="height:10px"></div>
+      <button class="btn btn-primary" id="btn-track">Start Tracking</button>
+      <button class="btn btn-ghost" id="btn-stop" disabled>Stop Tracking</button>
+    </div>
+
+    <!-- Create Zone -->
+    <div class="section">
+      <div class="section-label">Create Zone</div>
+      <div class="input-group">
+        <label>Zone Name</label>
+        <input type="text" id="zone-name" placeholder="e.g. School Campus" maxlength="30">
+      </div>
+      <div class="input-group">
+        <label>Radius</label>
+        <div class="radius-display"><span id="radius-val">200</span> <span>m</span></div>
+        <input type="range" id="radius-slider" min="50" max="2000" value="200" step="50">
+      </div>
+      <div class="input-group">
+        <label>Zone Color</label>
+        <div class="color-row" id="color-row"></div>
+      </div>
+      <p class="tip"><strong>Tip:</strong> Click anywhere on the map to place the zone center, then click "Add Zone".</p>
+      <div style="height:10px"></div>
+      <button class="btn btn-primary" id="btn-add-zone" disabled>Add Zone</button>
+    </div>
+
+    <!-- Active Zones -->
+    <div class="section">
+      <div class="section-label">Active Zones</div>
+      <div id="zone-list"><p class="log-empty">No zones yet.<br>Click the map to place one.</p></div>
+    </div>
+
+    <!-- Alert Log -->
+    <div class="section" style="flex:1">
+      <div class="section-label">Alert Log</div>
+      <div id="alert-log"><p class="log-empty">Alerts will appear here.</p></div>
+    </div>
+
+  </div>
+
+  <!-- MAP -->
+  <div id="map">
+    <div id="alert-banner">
+      <div class="alert-icon" id="alert-icon">🟢</div>
+      <div>
+        <div class="alert-msg" id="alert-msg">Entered zone</div>
+        <div class="alert-sub" id="alert-sub">Zone name</div>
+      </div>
+    </div>
+    <div id="dist-overlay">
+      <div style="color:var(--muted)">Nearest zone</div>
+      <div class="dist-val" id="dist-val">—</div>
+      <div style="margin-top:2px" id="dist-name">—</div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+// ── CONFIG ──
+const COLORS = ['#00e5a0','#ff4d6d','#ffb830','#4fc3f7','#ce93d8','#ff8a65','#a5d6a7','#ef9a9a'];
+let selectedColor = COLORS[0];
+let zones = [];
+let watchId = null;
+let userMarker = null;
+let userLat = null, userLng = null;
+let pendingCenter = null;
+let tempMarker = null;
+let zoneStates = {}; // id -> 'inside'|'outside'
+
+// ── COLOR SWATCHES ──
+const colorRow = document.getElementById('color-row');
+COLORS.forEach(c => {
+  const sw = document.createElement('div');
+  sw.className = 'color-swatch' + (c === selectedColor ? ' selected' : '');
+  sw.style.background = c;
+  sw.onclick = () => {
+    document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
+    sw.classList.add('selected');
+    selectedColor = c;
+    if (tempMarker && pendingCenter) {
+      map.removeLayer(tempMarker);
+      tempMarker = L.circleMarker([pendingCenter[0], pendingCenter[1]], previewStyle()).addTo(map);
+    }
+  };
+  colorRow.appendChild(sw);
+});
+
+// ── MAP INIT ──
+const map = L.map('map', { zoomControl: true }).setView([14.5995, 120.9842], 14);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+  attribution: '© OpenStreetMap © CARTO',
+  maxZoom: 19
+}).addTo(map);
+
+function previewStyle() {
+  return {
+    radius: 10, color: selectedColor, weight: 2,
+    fillColor: selectedColor, fillOpacity: 0.5
+  };
+}
+
+// ── MAP CLICK → place zone center ──
+map.on('click', e => {
+  pendingCenter = [e.latlng.lat, e.latlng.lng];
+  if (tempMarker) map.removeLayer(tempMarker);
+  tempMarker = L.circleMarker(pendingCenter, previewStyle())
+    .bindPopup('<b style="color:var(--accent)">Zone center set</b><br>Fill the form and click Add Zone.')
+    .addTo(map).openPopup();
+  document.getElementById('btn-add-zone').disabled = false;
+});
+
+// ── RADIUS SLIDER ──
+const radiusSlider = document.getElementById('radius-slider');
+radiusSlider.addEventListener('input', () => {
+  document.getElementById('radius-val').textContent = radiusSlider.value;
+});
+
+// ── ADD ZONE ──
+document.getElementById('btn-add-zone').addEventListener('click', () => {
+  if (!pendingCenter) return;
+  const name = document.getElementById('zone-name').value.trim() || 'Zone ' + (zones.length + 1);
+  const radius = parseInt(radiusSlider.value);
+  const color = selectedColor;
+  const id = Date.now();
+
+  const circle = L.circle(pendingCenter, {
+    radius, color, fillColor: color,
+    fillOpacity: 0.12, weight: 1.5, dashArray: '5 5'
+  }).addTo(map);
+
+  const dot = L.circleMarker(pendingCenter, {
+    radius: 5, color, fillColor: color, fillOpacity: 0.9, weight: 1.5
+  }).bindPopup(`<b>${name}</b><br>${radius}m radius`).addTo(map);
+
+  zones.push({ id, name, center: pendingCenter, radius, color, circle, dot });
+  zoneStates[id] = 'unknown';
+
+  if (tempMarker) { map.removeLayer(tempMarker); tempMarker = null; }
+  pendingCenter = null;
+  document.getElementById('zone-name').value = '';
+  document.getElementById('btn-add-zone').disabled = true;
+
+  renderZoneList();
+  document.getElementById('disp-zones').textContent = zones.length;
+  document.getElementById('dist-overlay').style.display = zones.length ? 'block' : 'none';
+});
+
+// ── ZONE LIST RENDER ──
+function renderZoneList() {
+  const el = document.getElementById('zone-list');
+  if (!zones.length) { el.innerHTML = '<p class="log-empty">No zones yet.<br>Click the map to place one.</p>'; return; }
+  el.innerHTML = zones.map(z => `
+    <div class="zone-item" id="zone-item-${z.id}">
+      <div class="zone-color-dot" style="background:${z.color}"></div>
+      <div class="zone-info">
+        <div class="zone-name">${z.name}</div>
+        <div class="zone-meta">${z.radius}m · ${z.center[0].toFixed(4)}, ${z.center[1].toFixed(4)}</div>
+      </div>
+      <button class="zone-del" onclick="deleteZone(${z.id})" title="Delete">×</button>
+    </div>
+  `).join('');
+}
+
+// ── DELETE ZONE ──
+function deleteZone(id) {
+  const z = zones.find(z => z.id === id);
+  if (!z) return;
+  map.removeLayer(z.circle);
+  map.removeLayer(z.dot);
+  zones = zones.filter(z => z.id !== id);
+  delete zoneStates[id];
+  renderZoneList();
+  document.getElementById('disp-zones').textContent = zones.length;
+  if (!zones.length) document.getElementById('dist-overlay').style.display = 'none';
+}
+
+// ── HAVERSINE ──
+function haversine(lat1, lng1, lat2, lng2) {
+  const R = 6371000;
+  const dLat = (lat2-lat1)*Math.PI/180;
+  const dLng = (lng2-lng1)*Math.PI/180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+// ── ALERT BANNER ──
+let bannerTimer = null;
+function showBanner(type, zoneName, distance) {
+  const banner = document.getElementById('alert-banner');
+  const icon = document.getElementById('alert-icon');
+  const msg = document.getElementById('alert-msg');
+  const sub = document.getElementById('alert-sub');
+  clearTimeout(bannerTimer);
+  if (type === 'enter') {
+    banner.className = '';
+    icon.textContent = '🟢';
+    msg.textContent = 'Entered zone';
+    banner.style.borderColor = 'var(--accent)';
+    banner.style.boxShadow = '0 4px 32px rgba(0,229,160,0.15)';
+  } else {
+    banner.className = 'exit-alert';
+    icon.textContent = '🔴';
+    msg.textContent = 'Exited zone';
+    banner.style.borderColor = 'var(--danger)';
+    banner.style.boxShadow = '0 4px 32px rgba(255,77,109,0.15)';
+  }
+  sub.textContent = zoneName;
+  banner.classList.add('show');
+  bannerTimer = setTimeout(() => banner.classList.remove('show'), 4000);
+}
+
+// ── LOG ──
+function addLog(type, zoneName) {
+  const log = document.getElementById('alert-log');
+  const empty = log.querySelector('.log-empty');
+  if (empty) empty.remove();
+  const now = new Date().toLocaleTimeString();
+  const item = document.createElement('div');
+  item.className = 'log-item';
+  item.innerHTML = `
+    <div class="log-icon">${type==='enter'?'🟢':'🔴'}</div>
+    <div class="log-text">
+      <div class="log-zone ${type==='enter'?'log-enter':'log-exit'}">${type==='enter'?'Entered':'Exited'}: ${zoneName}</div>
+      <div class="log-time">${now}</div>
+    </div>`;
+  log.prepend(item);
+}
+
+// ── TRACKING ──
+function onPosition(pos) {
+  userLat = pos.coords.latitude;
+  userLng = pos.coords.longitude;
+  const acc = pos.coords.accuracy;
+
+  document.getElementById('disp-lat').textContent = userLat.toFixed(5);
+  document.getElementById('disp-lng').textContent = userLng.toFixed(5);
+  document.getElementById('disp-acc').textContent = Math.round(acc) + 'm';
+
+  // Update user marker
+  const icon = L.divIcon({ html: '<div class="user-marker-wrap"></div>', className: '', iconSize: [18,18], iconAnchor: [9,9] });
+  if (!userMarker) {
+    userMarker = L.marker([userLat, userLng], { icon }).addTo(map);
+    map.setView([userLat, userLng], 16);
+  } else {
+    userMarker.setLatLng([userLat, userLng]);
+  }
+
+  // Check zones
+  let anyInside = false;
+  let nearestDist = Infinity, nearestName = '';
+  zones.forEach(z => {
+    const dist = haversine(userLat, userLng, z.center[0], z.center[1]);
+    if (dist < nearestDist) { nearestDist = dist; nearestName = z.name; }
+    const inside = dist <= z.radius;
+    const prev = zoneStates[z.id];
+
+    if (inside && prev !== 'inside') {
+      zoneStates[z.id] = 'inside';
+      if (prev !== 'unknown') { showBanner('enter', z.name); addLog('enter', z.name); }
+      document.getElementById('zone-item-' + z.id)?.classList.add('active-zone');
+      z.circle.setStyle({ fillOpacity: 0.25, weight: 2, dashArray: '' });
+    } else if (!inside && prev === 'inside') {
+      zoneStates[z.id] = 'outside';
+      showBanner('exit', z.name); addLog('exit', z.name);
+      document.getElementById('zone-item-' + z.id)?.classList.remove('active-zone');
+      z.circle.setStyle({ fillOpacity: 0.12, weight: 1.5, dashArray: '5 5' });
+    } else if (!inside && prev === 'unknown') {
+      zoneStates[z.id] = 'outside';
+    }
+    if (inside) anyInside = true;
+  });
+
+  // Status pill
+  const pill = document.getElementById('status-pill');
+  if (!zones.length) {
+    pill.className = 'status-pill idle'; pill.textContent = '● IDLE';
+  } else if (anyInside) {
+    pill.className = 'status-pill inside'; pill.textContent = '● INSIDE ZONE';
+  } else {
+    pill.className = 'status-pill outside'; pill.textContent = '● OUTSIDE';
+  }
+
+  // Distance overlay
+  if (zones.length) {
+    const d = document.getElementById('dist-overlay');
+    d.style.display = 'block';
+    document.getElementById('dist-val').textContent = nearestDist < 1000
+      ? Math.round(nearestDist) + 'm'
+      : (nearestDist/1000).toFixed(2) + 'km';
+    document.getElementById('dist-name').textContent = nearestName;
+  }
+}
+
+function onError(err) {
+  alert('Location error: ' + err.message + '\n\nMake sure location access is allowed in your browser.');
+}
+
+document.getElementById('btn-track').addEventListener('click', () => {
+  if (!navigator.geolocation) { alert('Geolocation not supported.'); return; }
+  watchId = navigator.geolocation.watchPosition(onPosition, onError, {
+    enableHighAccuracy: true, maximumAge: 2000, timeout: 10000
+  });
+  document.getElementById('btn-track').disabled = true;
+  document.getElementById('btn-stop').disabled = false;
+  document.getElementById('status-pill').className = 'status-pill idle';
+  document.getElementById('status-pill').textContent = '● TRACKING';
+});
+
+document.getElementById('btn-stop').addEventListener('click', () => {
+  if (watchId !== null) { navigator.geolocation.clearWatch(watchId); watchId = null; }
+  document.getElementById('btn-track').disabled = false;
+  document.getElementById('btn-stop').disabled = true;
+  document.getElementById('status-pill').className = 'status-pill idle';
+  document.getElementById('status-pill').textContent = '● IDLE';
+});
+</script>
+</body>
+</html>
