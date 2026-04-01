@@ -21,14 +21,10 @@
 }
 html,body{height:100%;overflow:hidden}
 body{background:var(--bg);color:var(--text);font-family:var(--sans);display:flex;flex-direction:column}
-
-/* ── SCREENS ── */
 .screen{display:none;flex-direction:column;height:100%}
 .screen.active{display:flex}
 
-/* ══════════════════════════════
-   LOGIN SCREEN
-══════════════════════════════ */
+/* LOGIN */
 #screen-login{align-items:center;justify-content:center;padding:24px;background:var(--bg)}
 .login-card{width:100%;max-width:380px;background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:32px 28px}
 .login-logo{font-family:var(--mono);font-size:18px;color:var(--accent);display:flex;align-items:center;gap:8px;margin-bottom:6px}
@@ -45,13 +41,9 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);display:flex
 .field input::placeholder{color:var(--muted)}
 .login-btn{width:100%;padding:13px;border-radius:8px;border:1px solid var(--accent);background:var(--accent-dim);color:var(--accent);font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .2s;margin-top:4px;-webkit-tap-highlight-color:transparent}
 .login-btn:active{background:rgba(0,229,160,.25)}
-.login-hint{font-size:11px;color:var(--muted);margin-top:14px;line-height:1.6;text-align:center}
-.login-hint b{color:var(--accent)}
 .login-error{font-size:11px;color:var(--danger);font-family:var(--mono);margin-top:10px;text-align:center;min-height:16px}
 
-/* ══════════════════════════════
-   SHARED APP SHELL
-══════════════════════════════ */
+/* HEADER */
 header{display:flex;align-items:center;justify-content:space-between;padding:0 16px;height:52px;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0;z-index:1100;gap:10px}
 .header-left{display:flex;align-items:center;gap:10px}
 .hamburger{width:36px;height:36px;background:var(--surface2);border:1px solid var(--border2);border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;flex-shrink:0;-webkit-tap-highlight-color:transparent}
@@ -72,12 +64,12 @@ header{display:flex;align-items:center;justify-content:space-between;padding:0 1
 .logout-btn{background:none;border:1px solid var(--border2);color:var(--muted);font-family:var(--mono);font-size:9px;padding:3px 8px;border-radius:6px;cursor:pointer;letter-spacing:.05em;text-transform:uppercase;-webkit-tap-highlight-color:transparent}
 .logout-btn:active{border-color:var(--danger);color:var(--danger)}
 
-/* ── LAYOUT ── */
+/* LAYOUT */
 .layout{display:flex;flex:1;overflow:hidden;position:relative}
 .overlay{display:none;position:absolute;inset:0;background:rgba(0,0,0,.55);z-index:900;opacity:0;transition:opacity .3s}
 .overlay.show{display:block;opacity:1}
 
-/* ── SIDEBAR ── */
+/* SIDEBAR */
 .sidebar{position:absolute;top:0;left:0;bottom:0;width:var(--sidebar-w);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;z-index:950;transform:translateX(-100%);transition:transform .3s cubic-bezier(.4,0,.2,1)}
 .sidebar.open{transform:translateX(0)}
 .sidebar::-webkit-scrollbar{width:3px}
@@ -90,13 +82,13 @@ header{display:flex;align-items:center;justify-content:space-between;padding:0 1
 .section{padding:14px 16px;border-bottom:1px solid var(--border)}
 .section-label{font-family:var(--mono);font-size:9px;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;margin-bottom:10px}
 
-/* ── COORDS ── */
+/* COORDS */
 .coords-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
 .coord-box{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 11px}
 .coord-box .lbl{font-size:9px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;font-family:var(--mono)}
 .coord-box .val{font-family:var(--mono);font-size:11px;color:var(--accent);margin-top:3px}
 
-/* ── INPUTS ── */
+/* INPUTS */
 .input-group{margin-bottom:10px}
 .input-group label{display:block;font-size:10px;color:var(--muted);margin-bottom:5px;font-family:var(--mono);letter-spacing:.05em;text-transform:uppercase}
 .input-group input,.input-group textarea{width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:8px;padding:10px 12px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;transition:border-color .2s;-webkit-appearance:none}
@@ -104,19 +96,18 @@ header{display:flex;align-items:center;justify-content:space-between;padding:0 1
 .input-group input::placeholder,.input-group textarea::placeholder{color:var(--muted)}
 .input-group textarea{resize:none;height:70px;line-height:1.5}
 
-/* ── BUTTONS ── */
+/* BUTTONS */
 .btn{width:100%;padding:11px;border-radius:8px;border:1px solid;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:all .2s;margin-bottom:8px;-webkit-tap-highlight-color:transparent}
 .btn-primary{background:var(--accent-dim);border-color:var(--accent);color:var(--accent)}
 .btn-primary:active{background:rgba(0,229,160,.25)}
 .btn-primary:disabled{opacity:.35;cursor:not-allowed}
 .btn-warn{background:var(--warn-dim);border-color:var(--warn);color:var(--warn)}
 .btn-warn:active{background:rgba(255,184,48,.22)}
-.btn-danger{background:var(--danger-dim);border-color:var(--danger);color:var(--danger)}
 .btn-ghost{background:transparent;border-color:var(--border2);color:var(--muted)}
 .btn-ghost:active{border-color:var(--text);color:var(--text)}
 .btn-ghost:disabled{opacity:.35;cursor:not-allowed}
 
-/* ── ZONE LIST ── */
+/* ZONE LIST */
 .zone-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;margin-bottom:8px;transition:border-color .2s}
 .zone-item.active-zone{border-color:var(--accent)}
 .zone-color-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
@@ -126,8 +117,8 @@ header{display:flex;align-items:center;justify-content:space-between;padding:0 1
 .zone-del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:20px;line-height:1;padding:6px;-webkit-tap-highlight-color:transparent}
 .zone-del:active{color:var(--danger)}
 
-/* ── STUDENT LIST ── */
-.student-item{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;margin-bottom:7px;transition:border-color .2s}
+/* STUDENT LIST */
+.student-item{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;margin-bottom:7px}
 .student-item.s-inside{border-color:var(--accent)}
 .student-item.s-outside{border-color:var(--danger)}
 .student-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;background:var(--muted)}
@@ -137,7 +128,7 @@ header{display:flex;align-items:center;justify-content:space-between;padding:0 1
 .student-name{font-size:12px;font-weight:500}
 .student-meta{font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:2px}
 
-/* ── ALERT LOG ── */
+/* ALERT LOG */
 .log-empty{font-size:12px;color:var(--muted);font-family:var(--mono);text-align:center;padding:16px 0}
 .log-item{display:flex;gap:8px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px;animation:fadein .3s ease}
 @keyframes fadein{from{opacity:0;transform:translateY(-4px)}to{opacity:1}}
@@ -147,10 +138,10 @@ header{display:flex;align-items:center;justify-content:space-between;padding:0 1
 .log-enter{color:var(--accent)}
 .log-exit{color:var(--danger)}
 
-/* ── MAP ── */
+/* MAP */
 #map{flex:1;position:relative;z-index:0}
 
-/* ── ALERT BANNER ── */
+/* ALERT BANNER */
 #alert-banner{position:absolute;top:12px;left:50%;transform:translateX(-50%) translateY(-90px);z-index:2000;background:var(--surface);border:1px solid var(--accent);border-radius:12px;padding:11px 18px;display:flex;align-items:center;gap:10px;min-width:220px;max-width:88vw;transition:transform .4s cubic-bezier(.34,1.56,.64,1);pointer-events:none}
 #alert-banner.show{transform:translateX(-50%) translateY(0)}
 #alert-banner.exit-alert{border-color:var(--danger)}
@@ -159,15 +150,15 @@ header{display:flex;align-items:center;justify-content:space-between;padding:0 1
 .alert-msg{font-size:13px;font-weight:500}
 .alert-sub{font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:2px}
 
-/* ── DISTANCE OVERLAY ── */
+/* DISTANCE */
 #dist-overlay{position:absolute;bottom:14px;right:14px;z-index:1000;background:var(--surface);border:1px solid var(--border2);border-radius:10px;padding:10px 14px;font-family:var(--mono);font-size:11px;color:var(--muted);min-width:130px;display:none}
 #dist-overlay .dist-val{font-size:20px;font-weight:700;color:var(--text);line-height:1;margin:3px 0}
 
-/* ── TAP HINT ── */
+/* TAP HINT */
 #tap-hint{position:absolute;bottom:70px;left:50%;transform:translateX(-50%);z-index:1000;background:var(--surface);border:1px solid var(--border2);border-radius:20px;padding:7px 16px;font-family:var(--mono);font-size:10px;color:var(--muted);white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .4s}
 #tap-hint.show{opacity:1}
 
-/* ── LEAFLET ── */
+/* LEAFLET */
 .leaflet-container{background:#0d1117}
 .leaflet-tile{filter:none}
 .leaflet-control-zoom a{background:var(--surface)!important;color:var(--text)!important;border-color:var(--border2)!important}
@@ -176,61 +167,51 @@ header{display:flex;align-items:center;justify-content:space-between;padding:0 1
 .user-marker-wrap{display:flex;align-items:center;justify-content:center;width:18px;height:18px;background:var(--accent);border-radius:50%;border:2px solid #fff;animation:ripple 2s infinite}
 @keyframes ripple{0%{box-shadow:0 0 0 0 rgba(0,229,160,.4)}70%{box-shadow:0 0 0 10px rgba(0,229,160,0)}100%{box-shadow:0 0 0 0 rgba(0,229,160,0)}}
 
-/* ── COLOR SWATCHES ── */
+/* COLOR SWATCHES */
 .color-row{display:flex;gap:8px;flex-wrap:wrap}
 .color-swatch{width:26px;height:26px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:transform .15s,border-color .15s;-webkit-tap-highlight-color:transparent}
 .color-swatch.selected{border-color:#fff;transform:scale(1.15)}
 
-/* ── RADIUS ── */
+/* RADIUS */
 .radius-display{font-family:var(--mono);font-size:20px;color:var(--accent);text-align:center;margin:4px 0}
 .radius-display span{font-size:12px;color:var(--muted)}
 input[type=range]{-webkit-appearance:none;width:100%;height:4px;background:var(--border2);border-radius:2px;outline:none;margin:6px 0}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--accent);cursor:pointer}
 .tip{font-size:11px;color:var(--muted);line-height:1.5;margin-top:6px}
 .tip strong{color:var(--warn)}
-
-/* ── SPINNER ── */
-.spinner{display:inline-block;width:16px;height:16px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle}
-@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
 
-<!-- ══════════════ LOGIN SCREEN ══════════════ -->
+<!-- LOGIN SCREEN -->
 <div class="screen active" id="screen-login">
   <div class="login-card">
     <div class="login-logo"><div class="login-dot"></div>GEOFENCE</div>
     <div class="login-sub">Classroom Location Tracker</div>
-
     <div class="tab-row">
       <button class="tab-btn active" id="tab-teacher" onclick="switchTab('teacher')">Teacher</button>
       <button class="tab-btn" id="tab-student" onclick="switchTab('student')">Student</button>
     </div>
-
-    <!-- Teacher login -->
     <div id="form-teacher">
       <div class="field"><label>Email</label><input type="email" id="t-email" placeholder="Enter email"></div>
       <div class="field"><label>Password</label><input type="password" id="t-pass" placeholder="••••••••"></div>
       <button class="login-btn" onclick="loginTeacher()">Sign In as Teacher</button>
     </div>
-
-    <!-- Student login/register -->
     <div id="form-student" style="display:none">
-      <div class="field"><label>Name</label><input type="text" id="s-name" placeholder="Your full name" id="s-name"></div>
+      <div class="field"><label>Name</label><input type="text" id="s-name" placeholder="Your full name"></div>
       <div class="field"><label>Email</label><input type="email" id="s-email" placeholder="you@email.com"></div>
       <div class="field"><label>Password</label><input type="password" id="s-pass" placeholder="••••••••"></div>
-      <button class="login-btn" id="s-login-btn" onclick="loginStudent()">Sign In</button>
+      <button class="login-btn" onclick="loginStudent()">Sign In</button>
       <div style="text-align:center;margin-top:10px">
         <span style="font-size:11px;color:var(--muted)">No account? </span>
         <button onclick="registerStudent()" style="background:none;border:none;color:var(--accent);font-family:var(--mono);font-size:11px;cursor:pointer;text-decoration:underline">Register</button>
       </div>
     </div>
-
     <div class="login-error" id="login-error"></div>
   </div>
 </div>
 
-<!-- ══════════════ APP SCREEN ══════════════ -->
+<!-- APP SCREEN -->
 <div class="screen" id="screen-app">
   <header>
     <div class="header-left">
@@ -248,26 +229,22 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 
   <div class="layout">
     <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
-
     <div class="sidebar" id="sidebar">
 
-      <!-- ── TEACHER SIDEBAR ── -->
+      <!-- TEACHER SIDEBAR -->
       <div id="teacher-sidebar" style="display:none">
-
         <div class="section">
           <div class="section-label">Students Online</div>
           <div id="student-list"><p class="log-empty">No students connected.</p></div>
         </div>
-
         <div class="section">
           <div class="section-label">Broadcast Alert</div>
           <div class="input-group">
             <label>Message</label>
-            <textarea id="alert-msg-input" placeholder="e.g. Please return to the campus now."></textarea>
+            <textarea id="alert-msg-input" placeholder="e.g. Please return to campus now."></textarea>
           </div>
           <button class="btn btn-warn" onclick="sendTeacherAlert()">Send Alert to All Students</button>
         </div>
-
         <div class="section">
           <div class="section-label">Create Zone</div>
           <div class="input-group">
@@ -287,17 +264,14 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
           <div style="height:8px"></div>
           <button class="btn btn-primary" id="btn-add-zone" disabled>Add Zone</button>
         </div>
-
         <div class="section">
           <div class="section-label">Active Zones</div>
           <div id="zone-list"><p class="log-empty">No zones yet.</p></div>
         </div>
-
       </div>
 
-      <!-- ── STUDENT SIDEBAR ── -->
+      <!-- STUDENT SIDEBAR -->
       <div id="student-sidebar" style="display:none">
-
         <div class="section">
           <div class="section-label">Your Position</div>
           <div class="coords-grid">
@@ -310,18 +284,16 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
           <button class="btn btn-primary" id="btn-track">Start Sharing Location</button>
           <button class="btn btn-ghost" id="btn-stop" disabled>Stop Sharing</button>
         </div>
-
         <div class="section">
           <div class="section-label">Zone Status</div>
           <div id="zone-status-list"><p class="log-empty">No zones set by teacher.</p></div>
         </div>
-
         <div class="section" style="flex:1">
           <div class="section-label">Alert Log</div>
           <div id="alert-log"><p class="log-empty">Alerts will appear here.</p></div>
         </div>
-
       </div>
+
     </div>
 
     <div id="map">
@@ -342,8 +314,9 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
   </div>
 </div>
 
-<!-- Firebase SDKs -->
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script type="module">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
@@ -364,34 +337,23 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// ── CONSTANTS ──
 const TEACHER_EMAIL = 'teacher@geofence.com';
 const COLORS = ['#00e5a0','#ff4d6d','#ffb830','#4fc3f7','#ce93d8','#ff8a65','#a5d6a7','#ef9a9a'];
 let selectedColor = COLORS[0];
 let currentRole = null, currentUser = null, currentName = '';
-let zones = [], zoneStates = {}, zoneLayers = {};
+let zones = [], zoneStates = {};
 let watchId = null, userMarker = null, userLat = null, userLng = null;
 let pendingCenter = null, tempMarker = null;
 let studentMarkers = {}, studentUnsub = null, zoneUnsub = null, alertUnsub = null;
 let hintTimer, bannerTimer;
-
-// ── expose to window for onclick ──
-window.switchTab = switchTab;
-window.loginTeacher = loginTeacher;
-window.loginStudent = loginStudent;
-window.registerStudent = registerStudent;
-window.doLogout = doLogout;
-window.toggleSidebar = toggleSidebar;
-window.closeSidebar = closeSidebar;
-window.deleteZone = deleteZone;
-window.sendTeacherAlert = sendTeacherAlert;
+let map, mapReady = false;
 
 // ══ LOGIN ══
 function switchTab(tab) {
-  document.getElementById('tab-teacher').classList.toggle('active', tab==='teacher');
-  document.getElementById('tab-student').classList.toggle('active', tab==='student');
-  document.getElementById('form-teacher').style.display = tab==='teacher' ? '' : 'none';
-  document.getElementById('form-student').style.display = tab==='student' ? '' : 'none';
+  document.getElementById('tab-teacher').classList.toggle('active', tab === 'teacher');
+  document.getElementById('tab-student').classList.toggle('active', tab === 'student');
+  document.getElementById('form-teacher').style.display = tab === 'teacher' ? '' : 'none';
+  document.getElementById('form-student').style.display = tab === 'student' ? '' : 'none';
   document.getElementById('login-error').textContent = '';
 }
 
@@ -426,6 +388,7 @@ async function registerStudent() {
 }
 
 function setLoginError(msg) { document.getElementById('login-error').textContent = msg; }
+
 function friendlyError(e) {
   if (e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential') return 'Wrong email or password.';
   if (e.code === 'auth/user-not-found') return 'No account found. Please register.';
@@ -440,9 +403,9 @@ async function doLogout() {
   if (studentUnsub) studentUnsub();
   if (zoneUnsub) zoneUnsub();
   if (alertUnsub) alertUnsub();
-  zones.forEach(z => { map.removeLayer(z.circle); map.removeLayer(z.dot); });
-  zones = []; zoneStates = {}; zoneLayers = {};
-  Object.values(studentMarkers).forEach(m => map.removeLayer(m.marker));
+  zones.forEach(z => { if(z.circle) map.removeLayer(z.circle); if(z.dot) map.removeLayer(z.dot); });
+  zones = []; zoneStates = {};
+  Object.values(studentMarkers).forEach(s => map.removeLayer(s.marker));
   studentMarkers = {};
   await signOut(auth);
   showScreen('login');
@@ -455,7 +418,7 @@ onAuthStateChanged(auth, async user => {
   const snap = await getDoc(doc(db, 'users', user.uid));
   if (user.email === TEACHER_EMAIL) {
     currentRole = 'teacher'; currentName = 'Teacher';
-    if (!snap.exists()) await setDoc(doc(db, 'users', user.uid), { name:'Teacher', email: user.email, role:'teacher' });
+    if (!snap.exists()) await setDoc(doc(db, 'users', user.uid), { name: 'Teacher', email: user.email, role: 'teacher' });
   } else {
     currentRole = 'student';
     currentName = snap.exists() ? snap.data().name : user.email;
@@ -470,24 +433,21 @@ function initApp() {
   document.getElementById('role-badge').className = 'role-badge ' + currentRole;
   document.getElementById('teacher-sidebar').style.display = currentRole === 'teacher' ? '' : 'none';
   document.getElementById('student-sidebar').style.display = currentRole === 'student' ? '' : 'none';
-
   initMap();
   listenZones();
-  if (currentRole === 'teacher') { listenStudents(); }
-  if (currentRole === 'student') { listenAlerts(); }
+  if (currentRole === 'teacher') listenStudents();
+  if (currentRole === 'student') listenAlerts();
 }
 
 // ══ MAP ══
-let map, mapReady = false;
 function initMap() {
   if (mapReady) { map.invalidateSize(); return; }
   map = L.map('map', { zoomControl: true }).setView([14.5995, 120.9842], 14);
   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-    attribution:'© OpenStreetMap © CARTO', maxZoom:19
+    attribution: '© OpenStreetMap © CARTO', maxZoom: 19
   }).addTo(map);
   mapReady = true;
 
-  // color swatches
   const cr = document.getElementById('color-row');
   COLORS.forEach(c => {
     const sw = document.createElement('div');
@@ -505,7 +465,6 @@ function initMap() {
     document.getElementById('radius-val').textContent = this.value;
   });
 
-  // teacher: click to place zone center
   map.on('click', e => {
     if (currentRole !== 'teacher') return;
     pendingCenter = [e.latlng.lat, e.latlng.lng];
@@ -520,36 +479,32 @@ function initMap() {
     hintTimer = setTimeout(() => hint.classList.remove('show'), 3000);
   });
 
-  document.getElementById('btn-add-zone')?.addEventListener('click', addZone);
-  document.getElementById('btn-track')?.addEventListener('click', startTracking);
-  document.getElementById('btn-stop')?.addEventListener('click', stopTrackingBtn);
-
+  document.getElementById('btn-add-zone').addEventListener('click', addZone);
+  document.getElementById('btn-track').addEventListener('click', startTracking);
+  document.getElementById('btn-stop').addEventListener('click', stopTrackingBtn);
   window.addEventListener('resize', () => map && map.invalidateSize());
 }
 
 function previewStyle() {
-  return { radius:10, color:selectedColor, weight:2, fillColor:selectedColor, fillOpacity:0.5 };
+  return { radius: 10, color: selectedColor, weight: 2, fillColor: selectedColor, fillOpacity: 0.5 };
 }
 
-// ══ ZONES (Firestore) ══
+// ══ ZONES ══
 function listenZones() {
   zoneUnsub = onSnapshot(collection(db, 'zones'), snap => {
-    // remove old layers
-    zones.forEach(z => {
-      if (z.circle) map.removeLayer(z.circle);
-      if (z.dot) map.removeLayer(z.dot);
-    });
+    zones.forEach(z => { if(z.circle) map.removeLayer(z.circle); if(z.dot) map.removeLayer(z.dot); });
     zones = [];
     snap.forEach(d => {
       const z = { id: d.id, ...d.data() };
-      const circle = L.circle(z.center, { radius:z.radius, color:z.color, fillColor:z.color, fillOpacity:0.12, weight:1.5, dashArray:'5 5' }).addTo(map);
-      const dot = L.circleMarker(z.center, { radius:5, color:z.color, fillColor:z.color, fillOpacity:0.9, weight:1.5 })
+      const circle = L.circle(z.center, { radius: z.radius, color: z.color, fillColor: z.color, fillOpacity: 0.12, weight: 1.5, dashArray: '5 5' }).addTo(map);
+      const dot = L.circleMarker(z.center, { radius: 5, color: z.color, fillColor: z.color, fillOpacity: 0.9, weight: 1.5 })
         .bindPopup(`<b>${z.name}</b><br>${z.radius}m radius`).addTo(map);
       zones.push({ ...z, circle, dot });
       if (!zoneStates[z.id]) zoneStates[z.id] = 'unknown';
     });
     renderZoneList();
-    document.getElementById('disp-zones').textContent = zones.length;
+    const el = document.getElementById('disp-zones');
+    if (el) el.textContent = zones.length;
     updateZoneStatusList();
     if (zones.length) document.getElementById('dist-overlay').style.display = 'block';
   });
@@ -568,8 +523,6 @@ async function addZone() {
 }
 
 async function deleteZone(id) {
-  const z = zones.find(z => z.id === id);
-  if (!z) return;
   await deleteDoc(doc(db, 'zones', id));
 }
 
@@ -578,7 +531,7 @@ function renderZoneList() {
   if (!el) return;
   if (!zones.length) { el.innerHTML = '<p class="log-empty">No zones yet.</p>'; return; }
   el.innerHTML = zones.map(z => `
-    <div class="zone-item" id="zone-item-${z.id}">
+    <div class="zone-item">
       <div class="zone-color-dot" style="background:${z.color}"></div>
       <div class="zone-info">
         <div class="zone-name">${z.name}</div>
@@ -618,20 +571,18 @@ function listenStudents() {
       const latlng = [data.lat, data.lng];
       const icon = L.divIcon({
         html: `<div style="background:#4fc3f7;width:14px;height:14px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 6px #4fc3f7"></div>`,
-        className:'', iconSize:[14,14], iconAnchor:[7,7]
+        className: '', iconSize: [14, 14], iconAnchor: [7, 7]
       });
       if (studentMarkers[uid]) {
         studentMarkers[uid].marker.setLatLng(latlng);
         studentMarkers[uid].marker.getPopup().setContent(`<b>${data.name}</b><br>${data.lat.toFixed(5)}, ${data.lng.toFixed(5)}`);
+        studentMarkers[uid].lat = data.lat; studentMarkers[uid].lng = data.lng;
       } else {
         const marker = L.marker(latlng, { icon })
           .bindPopup(`<b>${data.name}</b><br>${data.lat.toFixed(5)}, ${data.lng.toFixed(5)}`)
           .addTo(map);
-        studentMarkers[uid] = { marker, name: data.name };
+        studentMarkers[uid] = { marker, name: data.name, lat: data.lat, lng: data.lng };
       }
-      studentMarkers[uid].lat = data.lat;
-      studentMarkers[uid].lng = data.lng;
-      studentMarkers[uid].name = data.name;
     });
     renderStudentList();
   });
@@ -643,14 +594,13 @@ function renderStudentList() {
   const entries = Object.entries(studentMarkers);
   if (!entries.length) { el.innerHTML = '<p class="log-empty">No students connected.</p>'; return; }
   el.innerHTML = entries.map(([uid, s]) => {
-    // check if inside any zone
     let inside = false;
     zones.forEach(z => { if (haversine(s.lat, s.lng, z.center[0], z.center[1]) <= z.radius) inside = true; });
-    return `<div class="student-item ${inside?'s-inside':'s-outside'}">
-      <div class="student-dot ${inside?'inside':'outside'}"></div>
+    return `<div class="student-item ${inside ? 's-inside' : 's-outside'}">
+      <div class="student-dot ${inside ? 'inside' : 'outside'}"></div>
       <div class="student-info">
         <div class="student-name">${s.name}</div>
-        <div class="student-meta">${inside?'Inside zone':'Outside zone'}</div>
+        <div class="student-meta">${inside ? 'Inside zone' : 'Outside zone'}</div>
       </div>
     </div>`;
   }).join('');
@@ -667,10 +617,10 @@ async function sendTeacherAlert() {
 
 // ══ STUDENT ALERT LISTENER ══
 function listenAlerts() {
-  const q = query(collection(db, 'alerts'), orderBy('sentAt','desc'), limit(10));
+  const q = query(collection(db, 'alerts'), orderBy('sentAt', 'desc'), limit(10));
   let first = true;
   alertUnsub = onSnapshot(q, snap => {
-    if (first) { first = false; return; } // skip initial load
+    if (first) { first = false; return; }
     snap.docChanges().forEach(change => {
       if (change.type === 'added') {
         const data = change.doc.data();
@@ -681,11 +631,11 @@ function listenAlerts() {
   });
 }
 
-// ══ STUDENT TRACKING ══
+// ══ TRACKING ══
 async function startTracking() {
   if (!navigator.geolocation) { alert('Geolocation not supported.'); return; }
   try { await navigator.wakeLock.request('screen'); } catch(e) {}
-  watchId = navigator.geolocation.watchPosition(onPosition, onError, { enableHighAccuracy:true, maximumAge:2000, timeout:10000 });
+  watchId = navigator.geolocation.watchPosition(onPosition, onGeoError, { enableHighAccuracy: true, maximumAge: 2000, timeout: 10000 });
   document.getElementById('btn-track').disabled = true;
   document.getElementById('btn-stop').disabled = false;
   document.getElementById('status-pill').className = 'status-pill idle';
@@ -699,8 +649,7 @@ function stopTrackingBtn() {
   document.getElementById('btn-stop').disabled = true;
   document.getElementById('status-pill').className = 'status-pill idle';
   document.getElementById('status-pill').textContent = '● IDLE';
-  // remove from Firestore
-  deleteDoc(doc(db, 'locations', currentUser.uid)).catch(()=>{});
+  deleteDoc(doc(db, 'locations', currentUser.uid)).catch(() => {});
 }
 
 function stopTracking() {
@@ -710,23 +659,18 @@ function stopTracking() {
 async function onPosition(pos) {
   userLat = pos.coords.latitude; userLng = pos.coords.longitude;
   const acc = pos.coords.accuracy;
-
   document.getElementById('disp-lat').textContent = userLat.toFixed(5);
   document.getElementById('disp-lng').textContent = userLng.toFixed(5);
   document.getElementById('disp-acc').textContent = Math.round(acc) + 'm';
 
-  // push to Firestore
   await setDoc(doc(db, 'locations', currentUser.uid), {
-    lat: userLat, lng: userLng, acc, name: currentName,
-    updatedAt: serverTimestamp()
+    lat: userLat, lng: userLng, acc, name: currentName, updatedAt: serverTimestamp()
   });
 
-  // user marker
-  const icon = L.divIcon({ html:'<div class="user-marker-wrap"></div>', className:'', iconSize:[18,18], iconAnchor:[9,9] });
+  const icon = L.divIcon({ html: '<div class="user-marker-wrap"></div>', className: '', iconSize: [18, 18], iconAnchor: [9, 9] });
   if (!userMarker) { userMarker = L.marker([userLat, userLng], { icon }).addTo(map); map.setView([userLat, userLng], 16); }
   else { userMarker.setLatLng([userLat, userLng]); }
 
-  // check zones
   let anyInside = false, nearestDist = Infinity, nearestName = '';
   zones.forEach(z => {
     const dist = haversine(userLat, userLng, z.center[0], z.center[1]);
@@ -735,45 +679,45 @@ async function onPosition(pos) {
     if (inside && prev !== 'inside') {
       zoneStates[z.id] = 'inside';
       if (prev !== 'unknown') { showBanner('enter', z.name, ''); addLog('enter', z.name); }
-      z.circle.setStyle({ fillOpacity:0.25, weight:2, dashArray:'' });
+      z.circle.setStyle({ fillOpacity: 0.25, weight: 2, dashArray: '' });
     } else if (!inside && prev === 'inside') {
       zoneStates[z.id] = 'outside';
       showBanner('exit', z.name, ''); addLog('exit', z.name);
-      z.circle.setStyle({ fillOpacity:0.12, weight:1.5, dashArray:'5 5' });
+      z.circle.setStyle({ fillOpacity: 0.12, weight: 1.5, dashArray: '5 5' });
     } else if (!inside && prev === 'unknown') { zoneStates[z.id] = 'outside'; }
     if (inside) anyInside = true;
   });
 
   const pill = document.getElementById('status-pill');
-  if (!zones.length) { pill.className='status-pill idle'; pill.textContent='● SHARING'; }
-  else if (anyInside) { pill.className='status-pill inside'; pill.textContent='● INSIDE'; }
-  else { pill.className='status-pill outside'; pill.textContent='● OUTSIDE'; }
+  if (!zones.length) { pill.className = 'status-pill idle'; pill.textContent = '● SHARING'; }
+  else if (anyInside) { pill.className = 'status-pill inside'; pill.textContent = '● INSIDE'; }
+  else { pill.className = 'status-pill outside'; pill.textContent = '● OUTSIDE'; }
 
   if (zones.length) {
     document.getElementById('dist-overlay').style.display = 'block';
-    document.getElementById('dist-val').textContent = nearestDist < 1000 ? Math.round(nearestDist)+'m' : (nearestDist/1000).toFixed(2)+'km';
+    document.getElementById('dist-val').textContent = nearestDist < 1000 ? Math.round(nearestDist) + 'm' : (nearestDist / 1000).toFixed(2) + 'km';
     document.getElementById('dist-name').textContent = nearestName;
   }
   updateZoneStatusList();
 }
 
-function onError(e) { alert('Location error: ' + e.message); }
+function onGeoError(e) { alert('Location error: ' + e.message); }
 
 // ══ HELPERS ══
-function haversine(lat1,lng1,lat2,lng2) {
-  const R=6371000, dLat=(lat2-lat1)*Math.PI/180, dLng=(lng2-lng1)*Math.PI/180;
-  const a=Math.sin(dLat/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)**2;
-  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+function haversine(lat1, lng1, lat2, lng2) {
+  const R = 6371000, dLat = (lat2 - lat1) * Math.PI / 180, dLng = (lng2 - lng1) * Math.PI / 180;
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLng / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
 function showBanner(type, title, sub) {
   const banner = document.getElementById('alert-banner');
   clearTimeout(bannerTimer);
-  if (type==='enter') { banner.className=''; document.getElementById('banner-icon').textContent='🟢'; banner.style.borderColor='var(--accent)'; }
-  else if (type==='exit') { banner.className='exit-alert'; document.getElementById('banner-icon').textContent='🔴'; banner.style.borderColor='var(--danger)'; }
-  else { banner.className='teacher-alert'; document.getElementById('banner-icon').textContent='📢'; banner.style.borderColor='var(--warn)'; }
-  document.getElementById('banner-msg').textContent = title || (type==='enter'?'Entered zone':'Exited zone');
-  document.getElementById('banner-sub').textContent = sub || (type==='enter'||type==='exit' ? title : sub);
+  if (type === 'enter') { banner.className = ''; document.getElementById('banner-icon').textContent = '🟢'; banner.style.borderColor = 'var(--accent)'; }
+  else if (type === 'exit') { banner.className = 'exit-alert'; document.getElementById('banner-icon').textContent = '🔴'; banner.style.borderColor = 'var(--danger)'; }
+  else { banner.className = 'teacher-alert'; document.getElementById('banner-icon').textContent = '📢'; banner.style.borderColor = 'var(--warn)'; }
+  document.getElementById('banner-msg').textContent = title;
+  document.getElementById('banner-sub').textContent = sub;
   banner.classList.add('show');
   bannerTimer = setTimeout(() => banner.classList.remove('show'), 5000);
 }
@@ -785,9 +729,9 @@ function addLog(type, text) {
   if (empty) empty.remove();
   const item = document.createElement('div');
   item.className = 'log-item';
-  const icon = type==='enter'?'🟢':type==='exit'?'🔴':'📢';
-  const cls  = type==='enter'?'log-enter':type==='exit'?'log-exit':'';
-  const label = type==='enter'?'Entered: ':type==='exit'?'Exited: ':'Alert: ';
+  const icon = type === 'enter' ? '🟢' : type === 'exit' ? '🔴' : '📢';
+  const cls = type === 'enter' ? 'log-enter' : type === 'exit' ? 'log-exit' : '';
+  const label = type === 'enter' ? 'Entered: ' : type === 'exit' ? 'Exited: ' : 'Alert: ';
   item.innerHTML = `<div class="log-icon">${icon}</div>
     <div class="log-text">
       <div class="log-zone ${cls}">${label}${text}</div>
@@ -798,16 +742,35 @@ function addLog(type, text) {
 
 function showScreen(name) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById('screen-'+name).classList.add('active');
-  if (name==='app' && mapReady) setTimeout(()=>map.invalidateSize(),100);
+  document.getElementById('screen-' + name).classList.add('active');
+  if (name === 'app' && mapReady) setTimeout(() => map.invalidateSize(), 100);
 }
 
 function toggleSidebar() {
-  const sb=document.getElementById('sidebar');
-  const ov=document.getElementById('overlay');
-  const hb=document.getElementById('hamburger');
+  const sb = document.getElementById('sidebar');
+  const ov = document.getElementById('overlay');
+  const hb = document.getElementById('hamburger');
   if (sb.classList.contains('open')) { closeSidebar(); }
-  else { sb.classList.add('open'); ov.classList.add('show'); hb.classList.add('open'); map&&map.invalidateSize(); }
+  else { sb.classList.add('open'); ov.classList.add('show'); hb.classList.add('open'); map && map.invalidateSize(); }
 }
+
 function closeSidebar() {
-  document.getElementById('sidebar').classList.remove('open')
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+  document.getElementById('hamburger').classList.remove('open');
+}
+
+// ── expose all functions to window AFTER they are defined ──
+window.switchTab = switchTab;
+window.loginTeacher = loginTeacher;
+window.loginStudent = loginStudent;
+window.registerStudent = registerStudent;
+window.doLogout = doLogout;
+window.toggleSidebar = toggleSidebar;
+window.closeSidebar = closeSidebar;
+window.deleteZone = deleteZone;
+window.sendTeacherAlert = sendTeacherAlert;
+
+</script>
+</body>
+</html>
